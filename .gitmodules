@@ -19,3 +19,6 @@
 [submodule "erllibcloudapi"]
 	path = erllibcloudapi
 	url = https://github.com/project-fifo/erllibcloudapi
+[submodule "chunter"]
+	path = chunter
+	url = https://github.com/project-fifo/chunter
