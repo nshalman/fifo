@@ -11,3 +11,13 @@ A quick list of components for details please look at the repos or http://projec
 * snarl - a right management and option server.
 * sniffle - central component of project fifo.
 * wiggle - the web frontend.
+
+
+Variabls
+========
+```
+_OWN_IP_ - the nodes ip
+_REDIS_URL_ - the url of the redis server
+_REDIS_DOMAIN_ - the domain of the redis server
+_FIFOCOOKIE_ - cookie for this fifo instance.
+```
