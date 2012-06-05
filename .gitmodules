@@ -3,7 +3,7 @@
 	url = git@github.com:project-fifo/libsniffle.git
 [submodule "wiggle"]
 	path = wiggle
-	url = git@github.com:project-fifo/wiggle.git
+	url = https://github.com/project-fifo/wiggle.git
 [submodule "sniffle"]
 	path = sniffle
 	url = git@github.com:project-fifo/sniffle.git
