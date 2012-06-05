@@ -1,0 +1,3 @@
+[submodule "wiggle"]
+	path = wiggle
+	url = git://github.com/project-fifo/wiggle.git
