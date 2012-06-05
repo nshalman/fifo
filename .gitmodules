@@ -1,24 +1,3 @@
-[submodule "libsniffle"]
-	path = libsniffle
-	url = git@github.com:project-fifo/libsniffle.git
 [submodule "wiggle"]
 	path = wiggle
 	url = https://github.com/project-fifo/wiggle.git
-[submodule "sniffle"]
-	path = sniffle
-	url = git@github.com:project-fifo/sniffle.git
-[submodule "libsnarl"]
-	path = libsnarl
-	url = git@github.com:project-fifo/libsnarl.git
-[submodule "snarl"]
-	path = snarl
-	url = https://github.com/project-fifo/snarl
-[submodule "libchunter"]
-	path = libchunter
-	url = git@github.com:project-fifo/libchunter.git
-[submodule "erllibcloudapi"]
-	path = erllibcloudapi
-	url = https://github.com/project-fifo/erllibcloudapi
-[submodule "chunter"]
-	path = chunter
-	url = https://github.com/project-fifo/chunter
