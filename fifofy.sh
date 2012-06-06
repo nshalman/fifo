@@ -81,7 +81,7 @@ install_service() {
     mkdir -p /fifo >> fifo.log 
     cd /fifo >> fifo.log
     echo "[COMPONENT: $COMPONENT] Downloading."
-    [! -f $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 ] | curl -sO $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
+    [! -f $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 ] || curl -sO $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
     tar jxvf $COMPONENT.tar.bz2 >> fifo.log
     echo "[COMPONENT: $COMPONENT] Cleanup."
     rm $COMPONENT.tar.bz2 >> fifo.log
