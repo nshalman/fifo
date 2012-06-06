@@ -111,7 +111,7 @@ install_redis() {
     svccfg import redis.xml >> fifo.log
     rm redis.xml >> fifo.log
     echo "[REDIS] Enabeling."
-    svcadm enabeling redis >> fifo.log
+    svcadm enable redis >> fifo.log
     echo "[REDIS] Done."
 }
 
