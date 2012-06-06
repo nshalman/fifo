@@ -41,10 +41,11 @@ read_ip() {
 }
 
 subs() {
-    sed -e "s;_OWN_IP_;$OWN_IP;" -i $FILE
-    sed -e "s;_FIFOCOOKIE_;$COOKIE;" -i $FILE
-    sed -e "s;_REDIS_URL_;redis://$REDIS_IP;" -i $FILE
-    sed -e "s;_REDIS_DOMAIN_;$REDIS_DOMAIN;" -i $FILE
+    echo "[SUBS $FILE] replacing placeholders."
+    /opt/local/bin/sed -e "s;_OWN_IP_;$OWN_IP;" -i bak $FILE
+    /opt/local/bin/sed -e "s;_FIFOCOOKIE_;$COOKIE;" -i bak $FILE
+    /opt/local/bin/sed -e "s;_REDIS_URL_;redis://$REDIS_IP;" -i bak $FILE
+    /opt/local/bin/sed -e "s;_REDIS_DOMAIN_;$REDIS_DOMAIN;" -i bak $FILE
 }
 
 install_chunter() {
@@ -70,7 +71,9 @@ install_chunter() {
     mkdir -p /opt/custom/smf/
     cp /opt/$COMPONENT/$COMPONENT.xml /opt/custom/smf/
     svccfg import /opt/$COMPONENT/$COMPONENT.xml >> fifo.log
+    cd -
     echo "[COMPONENT: $COMPONENT] Done."
+
 }
 
 
@@ -102,6 +105,7 @@ install_service() {
     echo "[COMPONENT: $COMPONENT] Adding Service."
     svccfg import /fifo/$COMPONENT/$COMPONENT.xml >> fifo.log
     echo "[COMPONENT: $COMPONENT] Done."
+    cd -
 }
 
 install_redis() {
@@ -164,7 +168,7 @@ EOF
     curl -sO $BASE_PATH/$RELEASE/snarl.tar.bz2 >> fifo.log
     curl -sO $BASE_PATH/$RELEASE/sniffle.tar.bz2 >> fifo.log
     curl -sO $BASE_PATH/$RELEASE/wiggle.tar.bz2 >> fifo.log
-    
+    cd -
     zlogin fifo $0 snarl $ZONE_IP
     zlogin fifo $0 sniffle $ZONE_IP
     zlogin fifo $0 wiggle $ZONE_IP
