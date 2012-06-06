@@ -29,7 +29,7 @@ read_ip() {
     
     if echo $IP | grep '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'
     then
-	echo $IP
+	1
     else
 	echo "Invalid IP address: $IP."
 	read_ip
@@ -45,56 +45,74 @@ subs() {
 }
 
 install_chunter() {
+    echo "[COMPONENT: $COMPONENT] Starting installation"
     if [ `zonename` != "global" ]
     then
 	echo "chunter can only be installed in the global zone!"
 	exit 1
     fi
-    mkdir -p /opt
-    cd /opt
-    curl -O $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2
-    tar jxvf $COMPONENT.tar.bz2
-    rm $COMPONENT.tar.bz2    
-    subs $COMPONENT/releases/*/vm.args
-    subs $COMPONENT/releases/*/sys.config
-    svccfg import /opt/$COMPONENT/$COMPONENT.xml
+    mkdir -p /opt >> fifo.log
+    cd /opt >> fifo.log
+    echo "[COMPONENT: $COMPONENT] Downloading."
+    curl -O $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
+    tar jxvf $COMPONENT.tar.bz2 >> fifo.log
+    echo "[COMPONENT: $COMPONENT] Cleanup."
+    rm $COMPONENT.tar.bz2 >> fifo.log
+    echo "[COMPONENT: $COMPONENT] Configuring."
+    subs $COMPONENT/releases/*/vm.args >> fifo.log
+    subs $COMPONENT/releases/*/sys.config >> fifo.log
+    echo "[COMPONENT: $COMPONENT] Adding Service."
+    svccfg import /opt/$COMPONENT/$COMPONENT.xml >> fifo.log
+    echo "[COMPONENT: $COMPONENT] Done."
 }
 
 
 install_service() {
+    echo "[COMPONENT: $COMPONENT] Starting installation"
     if [ `zonename` == "global" ]
     then
 	echo "$COMPONENT can not be installed in the global zone!"
 	#	exit 1
     fi
-    mkdir -p /fifo
-    cd /fifo
-    curl -O $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2
-    tar jxvf $COMPONENT.tar.bz2
-    rm $COMPONENT.tar.bz2
-    subs $COMPONENT/releases/*/vm.args
-    subs $COMPONENT/releases/*/sys.config
-    svccfg import /fifo/$COMPONENT/$COMPONENT.xml
+    mkdir -p /fifo >> fifo.log 
+    cd /fifo >> fifo.log
+    echo "[COMPONENT: $COMPONENT] Downloading."
+    curl -O $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
+    tar jxvf $COMPONENT.tar.bz2 >> fifo.log
+    echo "[COMPONENT: $COMPONENT] Cleanup."
+    rm $COMPONENT.tar.bz2 >> fifo.log
+    echo "[COMPONENT: $COMPONENT] Configuring."
+    subs $COMPONENT/releases/*/vm.args >> fifo.log
+    subs $COMPONENT/releases/*/sys.config >> fifo.log
+    echo "[COMPONENT: $COMPONENT] Adding Service."
+    svccfg import /fifo/$COMPONENT/$COMPONENT.xml >> fifo.log
+    echo "[COMPONENT: $COMPONENT] Done."
 }
 
 install_redis() {
+    echo "[REDIS] Installing."
     if [ `zonename` == "global" ]
     then
 	echo "$COMPONENT can not be installed in the global zone!"
 	#	exit 1
     fi
-    pkgin install redis
-    curl -O  $BASE_PATH/$RELEASE/redis.xml
-    svccfg import redis.xml
-    rm redis.xml
-    svcadm clear redis
-
+    pkgin install redis >> fifo.log
+    echo "[REDIS] Fixing SVM."
+    curl -O  $BASE_PATH/$RELEASE/redis.xml >> fifo.log
+    svccfg import redis.xml >> fifo.log
+    rm redis.xml >> fifo.log
+    svcadm clear redis >> fifo.log
+    echo "[REDIS] Done."
 }
 
 install_zone() {
-    dsadm update
-    dsadm import $DATASET
-    vmadm create <<EOF
+    echo "[ZONE] Starting Zone installation."
+    echo "[ZONE] Updating datasets."
+    dsadm update >> fifo.log
+    echo "[ZONE] Inporting dataset."
+    dsadm import $DATASET >> fifo.log
+    echo "[ZONE] Creating VM."
+    vmadm create >> fifo.log<<EOF
 {
   "brand": "joyent",
   "quota": 40,
@@ -116,9 +134,9 @@ install_zone() {
   ]
 }
 EOF
-    cp $0 /zones/fifo/root/root
-    "waiting for zone."
-    sleep 30 
+    cp $0 /zones/fifo/root/root >> fifo.log
+    echo "[ZONE] Waiting..."
+    sleep 60
     zlogin fifo $0 redis $ZONE_IP
     zlogin fifo $0 snarl $ZONE_IP
     zlogin fifo $0 sniffle $ZONE_IP
