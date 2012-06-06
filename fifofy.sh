@@ -42,10 +42,10 @@ read_ip() {
 
 subs() {
     echo "[SUBS $FILE] replacing placeholders."
-    /opt/local/bin/sed -e "s;_OWN_IP_;$OWN_IP;" -i bak $FILE
-    /opt/local/bin/sed -e "s;_FIFOCOOKIE_;$COOKIE;" -i bak $FILE
-    /opt/local/bin/sed -e "s;_REDIS_URL_;redis://$REDIS_IP;" -i bak $FILE
-    /opt/local/bin/sed -e "s;_REDIS_DOMAIN_;$REDIS_DOMAIN;" -i bak $FILE
+    sed -e "s;_OWN_IP_;$OWN_IP;" -i bak $FILE
+    sed -e "s;_FIFOCOOKIE_;$COOKIE;" -i bak $FILE
+    sed -e "s;_REDIS_URL_;redis://$REDIS_IP;" -i bak $FILE
+    sed -e "s;_REDIS_DOMAIN_;$REDIS_DOMAIN;" -i bak $FILE
 }
 
 install_chunter() {
