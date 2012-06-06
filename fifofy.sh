@@ -27,7 +27,7 @@ read_ip() {
 	IP5=""
     fi
     
-    if echo $IP | egrep '[[:digit:]]\{1,3\}\.[[:digit:]]\{1,3\}\.[[:digit:]]\{1,3\}\.[[:digit:]]\{1,3\}'
+    if echo $IP | egrep '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'
     then
 	echo $IP
     else
