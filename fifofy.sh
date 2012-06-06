@@ -20,6 +20,10 @@ read_ip() {
 	fi
     else
 	IP=$IP1
+	if [ "$IP" == "-d" ]
+	then
+	    IP=$1
+	fi
 	IP1=$IP2
 	IP2=$IP3
 	IP3=$IP4
@@ -96,7 +100,7 @@ install_redis() {
 	echo "$COMPONENT can not be installed in the global zone!"
 	#	exit 1
     fi
-    pkgin install redis >> fifo.log
+    pkgin -y install redis >> fifo.log
     echo "[REDIS] Fixing SVM."
     curl -O  $BASE_PATH/$RELEASE/redis.xml >> fifo.log
     svccfg import redis.xml >> fifo.log
