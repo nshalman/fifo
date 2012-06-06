@@ -54,6 +54,7 @@ install_chunter() {
     cd /opt
     curl -O $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2
     tar jxvf $COMPONENT.tar.bz2
+    rm $COMPONENT.tar.bz2    
     subs $COMPONENT/releases/*/vm.args
     subs $COMPONENT/releases/*/sys.config
     svccfg import /opt/$COMPONENT/$COMPONENT.xml
@@ -70,6 +71,7 @@ install_service() {
     cd /fifo
     curl -O $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2
     tar jxvf $COMPONENT.tar.bz2
+    rm $COMPONENT.tar.bz2
     subs $COMPONENT/releases/*/vm.args
     subs $COMPONENT/releases/*/sys.config
     svccfg import /fifo/$COMPONENT/$COMPONENT.xml
@@ -81,7 +83,12 @@ install_redis() {
 	echo "$COMPONENT can not be installed in the global zone!"
 	#	exit 1
     fi
-    echo pkgin install redis
+    pkgin install redis
+    curl -O  $BASE_PATH/$RELEASE/redis.xml
+    svccfg import redis.xml
+    rm redis.xml
+    svcadm clear redis
+
 }
 
 install_zone() {
