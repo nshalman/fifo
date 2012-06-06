@@ -41,7 +41,6 @@ read_ip() {
 }
 
 subs() {
-    FILE=$1
     sed -e "s;_OWN_IP_;$OWN_IP;" -i $FILE
     sed -e "s;_FIFOCOOKIE_;$COOKIE;" -i $FILE
     sed -e "s;_REDIS_URL_;redis://$REDIS_IP;" -i $FILE
@@ -63,9 +62,13 @@ install_chunter() {
     echo "[COMPONENT: $COMPONENT] Cleanup."
     rm $COMPONENT.tar.bz2 >> fifo.log
     echo "[COMPONENT: $COMPONENT] Configuring."
-    subs $COMPONENT/releases/*/vm.args
-    subs $COMPONENT/releases/*/sys.config
+    FILE=$COMPONENT/releases/*/vm.args
+    subs
+    FILE=$COMPONENT/releases/*/sys.config
+    subs
     echo "[COMPONENT: $COMPONENT] Adding Service."
+    mkdir -p /opt/custom/smf/
+    cp /opt/$COMPONENT/$COMPONENT.xml /opt/custom/smf/
     svccfg import /opt/$COMPONENT/$COMPONENT.xml >> fifo.log
     echo "[COMPONENT: $COMPONENT] Done."
 }
@@ -86,8 +89,10 @@ install_service() {
     echo "[COMPONENT: $COMPONENT] Cleanup."
     rm $COMPONENT.tar.bz2 >> fifo.log
     echo "[COMPONENT: $COMPONENT] Configuring."
-    subs $COMPONENT/releases/*/vm.args
-    subs $COMPONENT/releases/*/sys.config
+    FILE=$COMPONENT/releases/*/vm.args
+    subs
+    FILE=$COMPONENT/releases/*/sys.config
+    subs 
     echo "[COMPONENT: $COMPONENT] Adding Service."
     svccfg import /fifo/$COMPONENT/$COMPONENT.xml >> fifo.log
     echo "[COMPONENT: $COMPONENT] Done."
@@ -105,7 +110,8 @@ install_redis() {
     curl -sO  $BASE_PATH/$RELEASE/redis.xml >> fifo.log
     svccfg import redis.xml >> fifo.log
     rm redis.xml >> fifo.log
-    svcadm clear redis >> fifo.log
+    echo "[REDIS] Enabeling."
+    svcadm enabeling redis >> fifo.log
     echo "[REDIS] Done."
 }
 
