@@ -136,7 +136,11 @@ install_zone() {
 EOF
     cp $0 /zones/fifo/root/root >> fifo.log
     echo "[ZONE] Waiting..."
-    sleep 60
+    while [ -f /zones/fifo/root/root/zoneinit ]
+    do
+	sleep 30
+    done
+    sleep 30
     zlogin fifo $0 redis $ZONE_IP
     zlogin fifo $0 snarl $ZONE_IP
     zlogin fifo $0 sniffle $ZONE_IP
