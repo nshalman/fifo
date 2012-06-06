@@ -63,8 +63,8 @@ install_chunter() {
     echo "[COMPONENT: $COMPONENT] Cleanup."
     rm $COMPONENT.tar.bz2 >> fifo.log
     echo "[COMPONENT: $COMPONENT] Configuring."
-    subs $COMPONENT/releases/*/vm.args >> fifo.log
-    subs $COMPONENT/releases/*/sys.config >> fifo.log
+    subs $COMPONENT/releases/*/vm.args
+    subs $COMPONENT/releases/*/sys.config
     echo "[COMPONENT: $COMPONENT] Adding Service."
     svccfg import /opt/$COMPONENT/$COMPONENT.xml >> fifo.log
     echo "[COMPONENT: $COMPONENT] Done."
@@ -81,13 +81,13 @@ install_service() {
     mkdir -p /fifo >> fifo.log 
     cd /fifo >> fifo.log
     echo "[COMPONENT: $COMPONENT] Downloading."
-    [! -f $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 ] || curl -sO $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
+    [ ! -f $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 ] || curl -sO $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
     tar jxvf $COMPONENT.tar.bz2 >> fifo.log
     echo "[COMPONENT: $COMPONENT] Cleanup."
     rm $COMPONENT.tar.bz2 >> fifo.log
     echo "[COMPONENT: $COMPONENT] Configuring."
-    subs $COMPONENT/releases/*/vm.args >> fifo.log
-    subs $COMPONENT/releases/*/sys.config >> fifo.log
+    subs $COMPONENT/releases/*/vm.args
+    subs $COMPONENT/releases/*/sys.config
     echo "[COMPONENT: $COMPONENT] Adding Service."
     svccfg import /fifo/$COMPONENT/$COMPONENT.xml >> fifo.log
     echo "[COMPONENT: $COMPONENT] Done."
@@ -100,7 +100,7 @@ install_redis() {
 	echo "$COMPONENT can not be installed in the global zone!"
 	#	exit 1
     fi
-    pkgin -y install redis >> fifo.log
+    /opt/local/bin/pkgin -y install redis >> fifo.log
     echo "[REDIS] Fixing SVM."
     curl -sO  $BASE_PATH/$RELEASE/redis.xml >> fifo.log
     svccfg import redis.xml >> fifo.log
@@ -142,7 +142,7 @@ EOF
     echo "[ZONE] Waiting..."
     while [ -f /zones/fifo/root/root/zoneinit ]
     do
-	sleep 30
+	sleep 5
     done
     sleep 30
     zlogin fifo $0 redis $ZONE_IP
