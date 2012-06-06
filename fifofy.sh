@@ -29,7 +29,7 @@ read_ip() {
     
     if echo $IP | grep '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'
     then
-	1
+	true
     else
 	echo "Invalid IP address: $IP."
 	read_ip
