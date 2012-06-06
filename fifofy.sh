@@ -208,6 +208,7 @@ read_component() {
 	    ZONE_DNS=$IP
 	    install_zone
 	    REDIS_IP=$ZONE_IP
+	    COMPONENT=chunter
 	    install_chunter 
 	    ;;
 	chunter)
