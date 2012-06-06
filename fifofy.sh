@@ -3,7 +3,7 @@ BASE_PATH="http://release.project-fifo.net"
 RELEASE="pre-release/0.1.0"
 REDIS_DOMAIN="fifo"
 COOKIE="fifo"
-DATASET="d6e2d9b2-a61c-11e1-b48e-13b3863ee438"
+DATASET="f9e4be48-9466-11e1-bc41-9f993f5dff36"
 
 read_ip() {
     if [ "x${IP1}x" == "xx" ]
@@ -58,7 +58,7 @@ install_chunter() {
     mkdir -p /opt >> fifo.log
     cd /opt >> fifo.log
     echo "[COMPONENT: $COMPONENT] Downloading."
-    curl -O $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
+    curl -sO $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
     tar jxvf $COMPONENT.tar.bz2 >> fifo.log
     echo "[COMPONENT: $COMPONENT] Cleanup."
     rm $COMPONENT.tar.bz2 >> fifo.log
@@ -81,7 +81,7 @@ install_service() {
     mkdir -p /fifo >> fifo.log 
     cd /fifo >> fifo.log
     echo "[COMPONENT: $COMPONENT] Downloading."
-    curl -O $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
+    [! -f $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 ] | curl -sO $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
     tar jxvf $COMPONENT.tar.bz2 >> fifo.log
     echo "[COMPONENT: $COMPONENT] Cleanup."
     rm $COMPONENT.tar.bz2 >> fifo.log
@@ -102,7 +102,7 @@ install_redis() {
     fi
     pkgin -y install redis >> fifo.log
     echo "[REDIS] Fixing SVM."
-    curl -O  $BASE_PATH/$RELEASE/redis.xml >> fifo.log
+    curl -sO  $BASE_PATH/$RELEASE/redis.xml >> fifo.log
     svccfg import redis.xml >> fifo.log
     rm redis.xml >> fifo.log
     svcadm clear redis >> fifo.log
@@ -146,6 +146,13 @@ EOF
     done
     sleep 30
     zlogin fifo $0 redis $ZONE_IP
+    echo "[ZONE] Prefetcing services."
+    mkdir -p /zones/fifo/root/fifo
+    cd /zones/fifo/root/fifo
+    curl -sO $BASE_PATH/$RELEASE/snarl.tar.bz2 >> fifo.log
+    curl -sO $BASE_PATH/$RELEASE/sniffle.tar.bz2 >> fifo.log
+    curl -sO $BASE_PATH/$RELEASE/wiggle.tar.bz2 >> fifo.log
+    
     zlogin fifo $0 snarl $ZONE_IP
     zlogin fifo $0 sniffle $ZONE_IP
     zlogin fifo $0 wiggle $ZONE_IP
