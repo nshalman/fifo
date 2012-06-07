@@ -212,13 +212,13 @@ read_component() {
 	    install_chunter 
 	    ;;
 	chunter)
-	    echo "Please enter the IP for your zone."
-	    read_ip
-	    REDIS_IP=$IP
 	    echo "Please enter the IP for your hypervisor."
 	    read_ip
 	    OWN_IP=$IP
 	    install_chunter 
+	    echo "Please enter the IP for your zone."
+	    read_ip
+	    REDIS_IP=$IP
 	    ;;
 	zone)
 	    echo "Please enter the IP for your zone."
@@ -249,10 +249,28 @@ read_component() {
     esac
 }
 
+
+
 COMPONENT=$1
 IP1=$2
 IP2=$3
 IP3=$4
 IP4=$5
 IP5=$6
-read_component $0
+if [ "$COMPONENT" == "help" ]
+then
+    cat <<EOF
+$0 help                                - shows this help.
+$0 all <hypervisor ip> <zone ip>       - sets up the entire fifo suite.
+       <netmask> <gateway> <dns> 
+$0 zone <zone ip> <netmask> <gateway>  - creates the administration zone.
+        <dns>
+$0 chunter <hypervisor ip> <zone ip>   - sets up the chunter service.
+$0 redis <hypervisor ip>               - sets up redis in the current zone.
+$0 snarl <hypervisor ip>               - sets up snarl in the current zone.
+$0 sniffle <hypervisor ip>             - sets up sniffle in the current zone.
+$0 wiggle <hypervisor ip>              - sets up sniffle in the current zone.
+EOF
+else
+    read_component $0
+fi
