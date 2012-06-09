@@ -85,6 +85,7 @@ install_service() {
 	#	exit 1
     fi
     mkdir -p /fifo >> fifo.log 
+    mkdir -p /var/log/fifo >> fifo.log
     cd /fifo >> fifo.log
 
     if [ ! -f $COMPONENT.tar.bz2 ] 
