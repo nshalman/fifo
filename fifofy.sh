@@ -222,10 +222,10 @@ read_component() {
 	    echo "Please enter the IP for your hypervisor."
 	    read_ip
 	    OWN_IP=$IP
-	    install_chunter 
 	    echo "Please enter the IP for your zone."
 	    read_ip
 	    REDIS_IP=$IP
+	    install_chunter
 	    ;;
 	zone)
 	    echo "Please enter the IP for your zone."
