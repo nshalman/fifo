@@ -60,13 +60,14 @@ install_chunter() {
 	echo "chunter can only be installed in the global zone!"
 	exit 1
     fi
-    mkdir -p /opt >> fifo.log
-    cd /opt >> fifo.log
+    mkdir -p /var/log/fifo >> /var/log/fifo-install.log
+    mkdir -p /opt >> /var/log/fifo-install.log
+    cd /opt >> /var/log/fifo-install.log
     echo "[COMPONENT: $COMPONENT] Downloading."
-    curl -sO $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
-    tar jxvf $COMPONENT.tar.bz2 >> fifo.log
+    curl -sO $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> /var/log/fifo-install.log
+    tar jxvf $COMPONENT.tar.bz2 >> /var/log/fifo-install.log
     echo "[COMPONENT: $COMPONENT] Cleanup."
-    rm $COMPONENT.tar.bz2 >> fifo.log
+    rm $COMPONENT.tar.bz2 >> /var/log/fifo-install.log
     echo "[COMPONENT: $COMPONENT] Configuring."
     FILE=$COMPONENT/releases/*/vm.args
     subs
@@ -75,7 +76,7 @@ install_chunter() {
     echo "[COMPONENT: $COMPONENT] Adding Service."
     mkdir -p /opt/custom/smf/
     cp /opt/$COMPONENT/$COMPONENT.xml /opt/custom/smf/
-    svccfg import /opt/$COMPONENT/$COMPONENT.xml >> fifo.log
+    svccfg import /opt/$COMPONENT/$COMPONENT.xml >> /var/log/fifo-install.log
     cd -
     echo "[COMPONENT: $COMPONENT] Done."
 
@@ -89,27 +90,27 @@ install_service() {
 	echo "$COMPONENT can not be installed in the global zone!"
 	#	exit 1
     fi
-    mkdir -p /fifo >> fifo.log 
-    mkdir -p /var/log/fifo >> fifo.log
-    cd /fifo >> fifo.log
+    mkdir -p /fifo >> /var/log/fifo-install.log 
+    mkdir -p /var/log/fifo >> /var/log/fifo-install.log
+    cd /fifo >> /var/log/fifo-install.log
 
     if [ ! -f $COMPONENT.tar.bz2 ] 
     then
 	echo "[COMPONENT: $COMPONENT] Downloading."
-	curl -sO $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> fifo.log
+	curl -sO $BASE_PATH/$RELEASE/$COMPONENT.tar.bz2 >> /var/log/fifo-install.log
     else
 	echo "[COMPONENT: $COMPONENT] Skipping downloading."
     fi
-    tar jxvf $COMPONENT.tar.bz2 >> fifo.log
+    tar jxvf $COMPONENT.tar.bz2 >> /var/log/fifo-install.log
     echo "[COMPONENT: $COMPONENT] Cleanup."
-    rm $COMPONENT.tar.bz2 >> fifo.log
+    rm $COMPONENT.tar.bz2 >> /var/log/fifo-install.log
     echo "[COMPONENT: $COMPONENT] Configuring."
     FILE=$COMPONENT/releases/*/vm.args
     subs
     FILE=$COMPONENT/releases/*/sys.config
     subs 
     echo "[COMPONENT: $COMPONENT] Adding Service."
-    svccfg import /fifo/$COMPONENT/$COMPONENT.xml >> fifo.log
+    svccfg import /fifo/$COMPONENT/$COMPONENT.xml >> /var/log/fifo-install.log
     echo "[COMPONENT: $COMPONENT] Done."
     cd -
 }
@@ -121,24 +122,24 @@ install_redis() {
 	echo "$COMPONENT can not be installed in the global zone!"
 	#	exit 1
     fi
-    /opt/local/bin/pkgin -y install redis >> fifo.log
+    /opt/local/bin/pkgin -y install redis >> /var/log/fifo-install.log
     echo "[REDIS] Fixing SVM."
-    curl -sO  $BASE_PATH/$RELEASE/redis.xml >> fifo.log
-    svccfg import redis.xml >> fifo.log
-    rm redis.xml >> fifo.log
+    curl -sO  $BASE_PATH/$RELEASE/redis.xml >> /var/log/fifo-install.log
+    svccfg import redis.xml >> /var/log/fifo-install.log
+    rm redis.xml >> /var/log/fifo-install.log
     echo "[REDIS] Enabeling."
-    svcadm enable redis >> fifo.log
+    svcadm enable redis >> /var/log/fifo-install.log
     echo "[REDIS] Done."
 }
 
 install_zone() {
     echo "[ZONE] Starting Zone installation."
     echo "[ZONE] Updating datasets."
-    dsadm update >> fifo.log
+    dsadm update >> /var/log/fifo-install.log
     echo "[ZONE] Inporting dataset."
-    dsadm import $DATASET >> fifo.log
+    dsadm import $DATASET >> /var/log/fifo-install.log
     echo "[ZONE] Creating VM."
-    vmadm create >> fifo.log<<EOF
+    vmadm create >> /var/log/fifo-install.log<<EOF
 {
   "brand": "joyent",
   "quota": 40,
@@ -160,7 +161,7 @@ install_zone() {
   ]
 }
 EOF
-    cp $0 /zones/fifo/root/root >> fifo.log
+    cp $0 /zones/fifo/root/root >> /var/log/fifo-install.log
     echo "[ZONE] Waiting..."
     while [ -f /zones/fifo/root/root/zoneinit ]
     do
@@ -171,9 +172,9 @@ EOF
     echo "[ZONE] Prefetcing services."
     mkdir -p /zones/fifo/root/fifo
     cd /zones/fifo/root/fifo
-    curl -sO $BASE_PATH/$RELEASE/snarl.tar.bz2 >> fifo.log
-    curl -sO $BASE_PATH/$RELEASE/sniffle.tar.bz2 >> fifo.log
-    curl -sO $BASE_PATH/$RELEASE/wiggle.tar.bz2 >> fifo.log
+    curl -sO $BASE_PATH/$RELEASE/snarl.tar.bz2 >> /var/log/fifo-install.log
+    curl -sO $BASE_PATH/$RELEASE/sniffle.tar.bz2 >> /var/log/fifo-install.log
+    curl -sO $BASE_PATH/$RELEASE/wiggle.tar.bz2 >> /var/log/fifo-install.log
     cd -
     zlogin fifo $0 snarl $ZONE_IP
     zlogin fifo $0 sniffle $ZONE_IP
