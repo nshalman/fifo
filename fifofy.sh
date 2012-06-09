@@ -5,6 +5,11 @@ REDIS_DOMAIN="fifo"
 COOKIE="fifo"
 DATASET="f9e4be48-9466-11e1-bc41-9f993f5dff36"
 
+clean() {
+    vmadm delete fifo
+    /opt/chunter/bin/chunter stop
+    rm -rf /opt/chunter
+}
 read_ip() {
     if [ "x${IP1}x" == "xx" ]
     then
@@ -236,6 +241,10 @@ read_component() {
 	    ZONE_DNS=$IP
 	    install_zone
 	    ;;
+	exit)
+	    ;;
+	clean)
+	    clean;;
 	*)
 	    echo "Component '$COMPONENT' not supported."
 	    echo "Please choose one of: wiggle, sniffle, snarl, redis, chunter, zone or type exit."
@@ -243,8 +252,6 @@ read_component() {
 	    IP1=""
 	    IP2=""
 	    read_component
-	    ;;
-	exit)
 	    ;;
 	
     esac
