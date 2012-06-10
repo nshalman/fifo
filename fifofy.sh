@@ -60,7 +60,7 @@ install_chunter() {
 	echo "chunter can only be installed in the global zone!"
 	exit 1
     fi
-    mkdir -p /var/log/fifo >> /var/log/fifo-install.log
+    mkdir -p /var/log/fifo/$COMPONENT >> /var/log/fifo-install.log
     mkdir -p /opt >> /var/log/fifo-install.log
     cd /opt >> /var/log/fifo-install.log
     echo "[COMPONENT: $COMPONENT] Downloading."
@@ -91,7 +91,7 @@ install_service() {
 	#	exit 1
     fi
     mkdir -p /fifo >> /var/log/fifo-install.log 
-    mkdir -p /var/log/fifo >> /var/log/fifo-install.log
+    mkdir -p /var/log/fifo/$COMPONENT >> /var/log/fifo-install.log
     cd /fifo >> /var/log/fifo-install.log
 
     if [ ! -f $COMPONENT.tar.bz2 ] 
