@@ -19,3 +19,6 @@
 [submodule "sniffle"]
 	path = sniffle
 	url = git://github.com/project-fifo/sniffle.git
+[submodule "libchunter"]
+	path = libchunter
+	url = git://github.com/project-fifo/libchunter.git
